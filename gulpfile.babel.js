@@ -14,7 +14,7 @@ const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 gulp.task('scripts', () => {
-  return gulp.src('src/**/*.ts')
+  return gulp.src('docs/**/*.ts')
     .pipe($.typescript({
 
     }))
@@ -37,7 +37,7 @@ gulp.task('serve', () => {
     port: 4001
   });
 
-  gulp.watch(['src/**/*.html'], reload);
-  gulp.watch(['src/**/*.{scss,css}'], reload);
-  gulp.watch(['src/**/*.js'], reload);
+  gulp.watch(['docs/**/*.html'], reload);
+  gulp.watch(['docs/**/*.{scss,css}'], reload);
+  gulp.watch(['docs/**/*.js'], reload);
 });
