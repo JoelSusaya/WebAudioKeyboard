@@ -14,7 +14,7 @@ const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 gulp.task('scripts', () => {
-  return gulp.src('docs/**/*.ts')
+  return gulp.src('src/**/*.ts')
     .pipe($.typescript({
 
     }))
@@ -33,11 +33,11 @@ gulp.task('serve', () => {
     //       will present a certificate warning in the browser.
     // https: true,
     // files: [jekyllSiteDir + '/**'],
-    server: ['docs'],
+    server: ['src'],
     port: 4001
   });
 
-  gulp.watch(['docs/**/*.html'], reload);
-  gulp.watch(['docs/**/*.{scss,css}'], reload);
-  gulp.watch(['docs/**/*.js'], reload);
+  gulp.watch(['src/**/*.html'], reload);
+  gulp.watch(['src/**/*.{scss,css}'], reload);
+  gulp.watch(['src/**/*.js'], reload);
 });
