@@ -33,7 +33,7 @@ gulp.task('serve', () => {
     //       will present a certificate warning in the browser.
     // https: true,
     // files: [jekyllSiteDir + '/**'],
-    server: ['src'],
+    server: ['docs'],
     port: 4001
   });
 
