@@ -1,5 +1,4 @@
 /// <reference path="./definitions/keypress.d.ts" />
-/// <reference path="./definitions/timbre.d.ts" />
 
 /// <reference path="./KeyboardController.ts" />
 /// <reference path="./controlKeys.ts" />
