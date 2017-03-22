@@ -1,18 +1,22 @@
 {
-  "compileOnSave": true,
   "compilerOptions": {
     "allowJs": true,
     "target": "es2015",
-    "module": "commonjs",
+    "module": "es2015",
     "moduleResolution": "node",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": [ "es2015", "dom" ],
+    "outFile": "main.js",
     "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "compileOnSave": true
   },
   "exclude": [
-    "src/_main.js"
+    "src/scripts/**/*.js"
+  ],
+  "include": [
+    "src/scripts/*.ts"
   ]
 }

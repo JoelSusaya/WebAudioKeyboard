@@ -14,10 +14,10 @@ const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 gulp.task('scripts', () => {
-  let tsResult = gulp.src('src/**/*.ts')
+  let tsResult = gulp.src('src/scripts/**/*.ts')
     .pipe($.typescript.createProject('tsconfig.json')());
 
-  return tsResult.js.pipe(gulp.dest('src'));
+  return tsResult.js.pipe(gulp.dest('src/scripts'));
 });
 
 
@@ -39,5 +39,5 @@ gulp.task('serve', ['scripts'], () => {
 
   gulp.watch(['src/**/*.html'], reload);
   gulp.watch(['src/**/*.{scss,css}'], reload);
-  gulp.watch(['src/**/*.{ts, js}'], ['scripts', reload]);
+  gulp.watch(['src/scripts/**/*.{ts, js}'], ['scripts', reload]);
 });
