@@ -16,6 +16,10 @@ class Keyboard {
   constructor() {
     this._CHORD_RELEASE_TIME = 100;
 
+    this._keys_down = new Set("");
+    this._keys_released = new Set("");
+    this._chord = [];
+
     this._chordPressed = new Event("chordPressed");
     this._init();
   }
@@ -459,7 +463,7 @@ keys_down_node = document.getElementById("keys_down");
 chord_pressed_node = document.getElementById("chord_pressed");
 
 chord_callback = (e: Event): void  => {
-  chord_pressed_node.innerHTML = "Chord Pressed: " + String(keyboard.chord);
+  chord_pressed_node.innerHTML = "Chord Pressed: " + String(keyboard.chord.join(""));
 };
 
 keyboard = new Keyboard();

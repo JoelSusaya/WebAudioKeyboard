@@ -14,14 +14,14 @@ const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 gulp.task('scripts', () => {
-  return gulp.src('src/**/*.ts')
-    .pipe($.typescript({
+  let tsResult = gulp.src('src/**/*.ts')
+    .pipe($.typescript.createProject('tsconfig.json')());
 
-    }))
+  return tsResult.js.pipe(gulp.dest('src'));
 });
 
 
-gulp.task('serve', () => {
+gulp.task('serve', ['scripts'], () => {
   browserSync({
     notify: false,
     // Customize the Browsersync console logging prefix
@@ -39,5 +39,5 @@ gulp.task('serve', () => {
 
   gulp.watch(['src/**/*.html'], reload);
   gulp.watch(['src/**/*.{scss,css}'], reload);
-  gulp.watch(['src/**/*.js'], reload);
+  gulp.watch(['src/**/*.{ts, js}'], ['scripts', reload]);
 });
