@@ -2,7 +2,6 @@
 /// <reference path="./KeyboardController.ts" />
 /// <reference path="./controlKeys.ts" />
 
-
 let keys_down_node: HTMLElement;
 let chord_pressed_node: HTMLElement;
 let chord_callback: EventListener;
