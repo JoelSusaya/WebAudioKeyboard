@@ -1,3 +1,5 @@
+/// <reference path="./definitions/keypress.d.ts" />
+
 namespace KeyboardController {
   export class Keyboard {
     readonly _CHORD_RELEASE_TIME: number;
@@ -8,17 +10,18 @@ namespace KeyboardController {
 
     private _chordPressed: Event;
     private _combos: Array<object>;
-    private _element: HTMLElement;
+    private _eventElements: Array<HTMLElement>;
 
     public listener: keypress.Listener;
 
     constructor() {
-      this._CHORD_RELEASE_TIME = 100;
+      this._CHORD_RELEASE_TIME = 150;
 
       this._keys_down = new Set("");
       this._keys_released = new Set("");
       this._chord = [];
       this._combos = [];
+      this._eventElements = [];
 
       this._chordPressed = new Event("chordPressed");
       this._init();
@@ -28,11 +31,14 @@ namespace KeyboardController {
       this.listener = new keypress.Listener();
       this.listener.should_force_event_defaults = true;
 
+      // Generate combos from controlKeys.ts
       this.generateCombos(controlKeys);
 
+      // Register combos with our keyboard listener
       this.listener.register_many(this._combos);
     }
 
+    // Loop through the keys from controlKeys.ts and set up our combo array
     generateCombos(keys: Array<string>): void {
       for (let key of keys) {
         this._combos.push({
@@ -47,12 +53,14 @@ namespace KeyboardController {
       }
     }
 
+    // This function gets called whenever a key is down
     on_down(key: string): void {
       if (!this._keys_down.has(key)) {
         this._keys_down.add(key);
       }
     }
 
+    // This function gets called whenever a key goes up
     on_up(key: string): void {
       if (this._keys_down.has(key)) {
         this._keys_down.delete(key);
@@ -60,6 +68,14 @@ namespace KeyboardController {
       }
     }
 
+    // When a key is released, we want to track that it was released;
+    // If all other keys (if any) are also released before this._CHORD_RELEASE_TIME
+    // is reached, then a chord is registered from all the released keys.
+    // This also clears the tracker so that the other keys that were released don't
+    // generate a new chord.
+    //
+    // If keys are still down when the timer expiores, the released key is
+    // removed from our tracker.
     keyReleased(key: string): void {
       this._keys_released.add(key);
 
@@ -97,18 +113,27 @@ namespace KeyboardController {
       return this._chord;
     }
 
+    // Sets the chord and triggers the "chordPressed" event, which allows us
+    // to trigger actions whenever a new chord is registered
     setChord(key_set: Set<string>): void {
       this._chord = Array.from(key_set).sort();
-      this._element.dispatchEvent(this._chordPressed);
+
+      for (let element of this._eventElements) {
+        element.dispatchEvent(this._chordPressed);
+      }
     }
 
     get keys_down(): Array<string> {
       return Array.from(this._keys_down).sort();
     }
 
+    // This function lets us pass in an HTMLElement and an EventListener
+    // that we can apply the "chordPressed" event to.
+    // We also store the HTMLElement so we can fire the event whenever a chord
+    // is pressed.
     setChordEvent(element: HTMLElement, callback: EventListener) {
-      this._element = element;
-      this._element.addEventListener("chordPressed", callback, false);
+      element.addEventListener("chordPressed", callback, false);
+      this._eventElements.push(element);
     }
 
   }

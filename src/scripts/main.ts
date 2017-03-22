@@ -1,4 +1,6 @@
 /// <reference path="./definitions/keypress.d.ts" />
+/// <reference path="./definitions/timbre.d.ts" />
+
 /// <reference path="./KeyboardController.ts" />
 /// <reference path="./controlKeys.ts" />
 
@@ -6,6 +8,9 @@ let keys_down_node: HTMLElement;
 let chord_pressed_node: HTMLElement;
 let chord_callback: EventListener;
 let keyboard: KeyboardController.Keyboard;
+let audioContext: AudioContext;
+
+
 
 keys_down_node = document.getElementById("keys_down");
 chord_pressed_node = document.getElementById("chord_pressed");
