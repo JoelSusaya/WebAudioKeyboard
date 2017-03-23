@@ -49,21 +49,20 @@ gulp.task('scripts', () => {
 });
 
 gulp.task('webpack', () => {
-  const webpackProcess = child.spawn('C:/Users/joels/Real Documents/Websites/_workshop/WebAudioKeyboard/webpack.bat', [],
+  const webpackProcess = child.spawnSync('C:/Users/joels/Real Documents/Websites/_workshop/WebAudioKeyboard/webpack.bat', [],
     {
       cwd: './',
     }
   );
 
-  const webpackLogger = (buffer) => {
+  const logger = (buffer) => {
     buffer.toString()
       .split(/\n/)
       .forEach((message) => $.util.log('Webpack: ' + message));
   };
 
-  webpackProcess.stdout.on('data', webpackLogger);
-  webpackProcess.stderr.on('data', webpackLogger);
-  return webpackLogger;
+  logger(webpackProcess.stdout);
+  logger(webpackProcess.stderr);
 });
 
 gulp.task('serve', ['default'], () => {
