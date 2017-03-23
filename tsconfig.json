@@ -2,13 +2,11 @@
   "compilerOptions": {
     "allowJs": true,
     "target": "es2015",
-    "module": "es2015",
-    "moduleResolution": "node",
+    "module": "commonjs",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": [ "es2015", "dom" ],
-    "outFile": "main.js",
+    "lib": [ "es2015", "dom"],
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "compileOnSave": true
@@ -16,7 +14,9 @@
   "exclude": [
     "src/scripts/**/*.js"
   ],
-  "include": [
-    "src/scripts/*.ts"
+  "files": [
+    "src/scripts/controlKeys.ts",
+    "src/scripts/Keyboard.ts",
+    "src/scripts/main.ts"
   ]
 }

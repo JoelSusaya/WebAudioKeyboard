@@ -1,12 +1,9 @@
-/// <reference path="./definitions/keypress.d.ts" />
-
-/// <reference path="./KeyboardController.ts" />
-/// <reference path="./controlKeys.ts" />
+import { Keyboard } from "./Keyboard";
 
 let keys_down_node: HTMLElement;
 let chord_pressed_node: HTMLElement;
 let chord_callback: EventListener;
-let keyboard: KeyboardController.Keyboard;
+let keyboard: Keyboard;
 let audioContext: AudioContext;
 
 
@@ -18,7 +15,7 @@ chord_callback = (e: Event): void  => {
   chord_pressed_node.innerHTML = "Chord Pressed: " + String(keyboard.chord.join(""));
 };
 
-keyboard = new KeyboardController.Keyboard();
+keyboard = new Keyboard();
 
 keyboard.setChordEvent(chord_pressed_node, chord_callback);
 

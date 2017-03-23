@@ -10,10 +10,20 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import {output as pagespeed} from 'psi';
 import pkg from './package.json';
 
+import webpack from 'webpack-stream';
+import child from 'child_process';
+
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
-gulp.task('typescript', ['scripts'], () => {
+gulp.task('compile-scripts', cb =>
+  runSequence(
+    'webpack',
+    ['scripts'],
+    cb)
+);
+
+gulp.task('typescript', () => {
   let tsResult = gulp.src('src/scripts/**/*.ts')
     .pipe($.typescript.createProject('tsconfig.json')());
 
@@ -22,8 +32,7 @@ gulp.task('typescript', ['scripts'], () => {
 
 gulp.task('scripts', () => {
   gulp.src([
-    './src/scripts/KeyboardController.js',
-    './src/scripts/main.js'
+    './src/scripts/bundle.js'
   ])
     .pipe($.newer('.tmp/scripts'))
     .pipe($.sourcemaps.init())
@@ -31,7 +40,7 @@ gulp.task('scripts', () => {
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/scripts'))
     .pipe($.concat('main.min.js'))
-    .pipe($.uglify({preserveComments: 'some'}))
+    // .pipe($.uglify({preserveComments: 'some'}))
     // Output files
     .pipe($.size({title: 'scripts'}))
     .pipe($.sourcemaps.write('.'))
@@ -39,6 +48,23 @@ gulp.task('scripts', () => {
     .pipe(gulp.dest('.tmp/scripts'));
 });
 
+gulp.task('webpack', () => {
+  const webpackProcess = child.spawn('C:/Users/joels/Real Documents/Websites/_workshop/WebAudioKeyboard/webpack.bat', [],
+    {
+      cwd: './',
+    }
+  );
+
+  const webpackLogger = (buffer) => {
+    buffer.toString()
+      .split(/\n/)
+      .forEach((message) => $.util.log('Webpack: ' + message));
+  };
+
+  webpackProcess.stdout.on('data', webpackLogger);
+  webpackProcess.stderr.on('data', webpackLogger);
+  return webpackLogger;
+});
 
 gulp.task('serve', ['default'], () => {
   browserSync({
@@ -58,7 +84,7 @@ gulp.task('serve', ['default'], () => {
 
   gulp.watch(['src/**/*.html'], reload);
   gulp.watch(['src/**/*.{scss,css}'], reload);
-  gulp.watch(['src/scripts/**/*.{ts, js}'], ['scripts', reload]);
+  gulp.watch(['src/scripts/**/*.{ts, js}'], ['compile-scripts', reload]);
 });
 
 gulp.task('copy', () =>
@@ -72,12 +98,12 @@ gulp.task('copy', () =>
     .pipe($.size({title: 'copy'}))
 );
 
-// gulp.task('clean', () => del(['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
+ gulp.task('clean', () => del(['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
 
-gulp.task('default', cb =>
+gulp.task('default', ['clean'], cb =>
   runSequence(
-    'typescript',
-    ['scripts', 'copy'],
+    'compile-scripts',
+    ['copy'],
     cb
   )
 );
