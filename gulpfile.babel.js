@@ -13,15 +13,34 @@ import pkg from './package.json';
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
-gulp.task('scripts', () => {
+gulp.task('typescript', ['scripts'], () => {
   let tsResult = gulp.src('src/scripts/**/*.ts')
     .pipe($.typescript.createProject('tsconfig.json')());
 
   return tsResult.js.pipe(gulp.dest('src/scripts'));
 });
 
+gulp.task('scripts', () => {
+  gulp.src([
+    './src/scripts/KeyboardController.js',
+    './src/scripts/main.js'
+  ])
+    .pipe($.newer('.tmp/scripts'))
+    .pipe($.sourcemaps.init())
+    .pipe($.babel())
+    .pipe($.sourcemaps.write())
+    .pipe(gulp.dest('.tmp/scripts'))
+    .pipe($.concat('main.min.js'))
+    .pipe($.uglify({preserveComments: 'some'}))
+    // Output files
+    .pipe($.size({title: 'scripts'}))
+    .pipe($.sourcemaps.write('.'))
+    .pipe(gulp.dest('dist/scripts'))
+    .pipe(gulp.dest('.tmp/scripts'));
+});
 
-gulp.task('serve', ['scripts'], () => {
+
+gulp.task('serve', ['default'], () => {
   browserSync({
     notify: false,
     // Customize the Browsersync console logging prefix
@@ -33,7 +52,7 @@ gulp.task('serve', ['scripts'], () => {
     //       will present a certificate warning in the browser.
     // https: true,
     // files: [jekyllSiteDir + '/**'],
-    server: ['src'],
+    server: ['.tmp', 'src'],
     port: 4001
   });
 
@@ -41,3 +60,24 @@ gulp.task('serve', ['scripts'], () => {
   gulp.watch(['src/**/*.{scss,css}'], reload);
   gulp.watch(['src/scripts/**/*.{ts, js}'], ['scripts', reload]);
 });
+
+gulp.task('copy', () =>
+  gulp.src([
+    'app/*',
+    '!app/*.html',
+    'node_modules/apache-server-configs/dist/.htaccess'
+  ], {
+    dot: true
+  }).pipe(gulp.dest('dist'))
+    .pipe($.size({title: 'copy'}))
+);
+
+// gulp.task('clean', () => del(['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
+
+gulp.task('default', cb =>
+  runSequence(
+    'typescript',
+    ['scripts', 'copy'],
+    cb
+  )
+);

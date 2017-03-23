@@ -17,10 +17,10 @@ namespace KeyboardController {
     constructor() {
       this._CHORD_RELEASE_TIME = 150;
 
-      this._combos = [];
       this._keys_down = new Set("");
       this._keys_released = new Set("");
       this._chord = [];
+      this._combos = [];
       this._eventElements = [];
 
       this._chordPressed = new Event("chordPressed");
