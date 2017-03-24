@@ -10,7 +10,6 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import {output as pagespeed} from 'psi';
 import pkg from './package.json';
 
-import webpack from 'webpack-stream';
 import child from 'child_process';
 
 const $ = gulpLoadPlugins();

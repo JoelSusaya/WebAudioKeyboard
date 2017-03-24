@@ -78,7 +78,6 @@ const controlKeys_1 = __webpack_require__(1);
 class Keyboard {
     constructor() {
         this._CHORD_RELEASE_TIME = 150;
-        console.log("yo");
         this._keys_down = new Set("");
         this._keys_released = new Set("");
         this._chord = [];
